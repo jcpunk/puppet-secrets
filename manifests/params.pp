@@ -6,7 +6,7 @@ class secrets::params {
   if $::organization {
     $secret_path = "/etc/puppet/secrets/${::organization}"
   } else {
-    $secret_path = "/etc/puppet/secrets/"
+    $secret_path = '/etc/puppet/secrets/'
   }
 
   $repo_defaults = {
