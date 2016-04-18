@@ -10,7 +10,7 @@ class secrets (
   validate_bool($manage_repo)
   validate_array($secrets_repos)
   validate_hash($repo_defaults)
-  validate_array($install_secrets)
+  validate_hash($install_secrets)
   validate_hash($secrets_defaults)
 
   if $manage_repo {
