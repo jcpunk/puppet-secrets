@@ -5,7 +5,7 @@ class secrets (
   $repo_defaults    = $secrets::params::repo_defaults,
   $install_secrets  = $secrets::params::install_secrets,
   $secrets_defaults = $secrets::params::secrets_defaults,
-) {
+) inherits secrets::params {
 
   validate_bool($manage_repo)
   validate_array($secrets_repos)
