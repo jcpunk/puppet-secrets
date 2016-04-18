@@ -5,6 +5,10 @@ define secrets::resources::install (
   $owner = $secrets::params::secrets_defaults['owner'],
   $group = $secrets::params::secrets_defaults['group'],
   $mode = $secrets::params::secrets_defaults['mode'],
+  $selrange = $secrets::params::secrets_defaults['selrange'],
+  $selrole = $secrets::params::secrets_defaults['selrole'],
+  $seltype = $secrets::params::secrets_defaults['seltype'],
+  $seluser = $secrets::params::secrets_defaults['seluser'],
   $notify_service = $secrets::params::secrets_defaults['notify_service'],
   $secret_store = $secrets::params::secrets_defaults['secret_store'],
   $mandatory = $secrets::params::secrets_defaults['mandatory'],
@@ -16,13 +20,22 @@ define secrets::resources::install (
 
   if exists($base) {
     if exists("${base}${path}") {
-      file{$path:
+      file {$path:
         owner     => $owner,
         group     => $group,
         mode      => $mode,
         show_diff => false,
         content   => file_on_server("${base}${path}"),
         notify    => $notify_service,
+      }
+
+      if $::selinux {
+        File[$path] {
+          selrange => $selrange,
+          selrole  => $selrole,
+          seltype  => $seltype,
+          seluser  => $seluser,
+        }
       }
     } elsif $mandatory {
       fail("Mandatory Secret ${path} for ${::fqdn} does not exist in ${secret_store}")

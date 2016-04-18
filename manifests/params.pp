@@ -27,5 +27,9 @@ class secrets::params {
     mandatory      => true,
     secret_store   => $repo_defaults['as_secret_store'],
     notify_service => undef,
+    selrange       => undef,
+    selrole        => undef,
+    seltype        => undef,
+    seluser        => undef,
   }
 }
