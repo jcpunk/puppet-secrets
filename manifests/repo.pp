@@ -3,7 +3,7 @@
 class secrets::repo (
   $secrets_repos = $::secrets::secrets_repos,
   $repo_defaults = $::secrets::repo_defaults,
-) {
+) inherits secrets {
 
   create_resources('secrets::resources::repo', $secrets_repos, $repo_defaults)
 
