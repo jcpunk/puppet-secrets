@@ -13,10 +13,10 @@ class secrets::params {
     repo_provider       => 'git',
     repo_user           => 'root',
     manage_secret_store => true,
-    as_secret_store     => $secret_path,
-    secret_store_owner  => 'puppet',
+    secret_store        => $secret_path,
+    secret_store_owner  => 'apache',
     secret_store_group  => 'puppet',
-    secret_store_mode   => '0700',
+    secret_store_mode   => '0750',
   }
 
   $install_secrets = {}
@@ -25,8 +25,7 @@ class secrets::params {
     group          => 'root',
     mode           => '0400',
     mandatory      => true,
-    secret_store   => $repo_defaults['as_secret_store'],
-    notify_service => undef,
+    secret_store   => $repo_defaults['secret_store'],
     selrange       => undef,
     selrole        => undef,
     seltype        => undef,
