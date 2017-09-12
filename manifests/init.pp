@@ -5,11 +5,9 @@ class secrets (
   $repo_defaults    = $secrets::params::repo_defaults,
   $install_secrets  = $secrets::params::install_secrets,
   $secrets_defaults = $secrets::params::secrets_defaults,
-  $stage            = $secrets::params::stage,
 ) inherits secrets::params {
 
   validate_bool($manage_repo)
-  validate_string($stage)
 
   if $manage_repo {
     validate_hash($secrets_repos)

@@ -1,6 +1,5 @@
 # == Class secrets::params
 class secrets::params {
-  $stage = 'main'
 
   $manage_repo = false
   $secrets_repos = {}

@@ -17,6 +17,16 @@ define secrets::install (
 
   $base = "${secret_store}/${::fqdn}"
 
+  # yes I really want the literal non-interp string
+  $fqdn_replace_string = join(['$', '{::fqdn}'], '')
+  $hostname_replace_string = join(['$', '{::hostname}'], '')
+
+  $path_fqdn = regsubst($path, $fqdn_replace_string, $::fqdn, 'G')
+  $path_hostname = regsubst($path_fqdn, $hostname_replace_string, $::hostname, 'G')
+
+
+  $path_real = $path_hostname
+
   if ! exists($base) {
     notify {"missing base ${::fqdn}":
       message => "${::fqdn} does not have secrets on master",
@@ -24,17 +34,17 @@ define secrets::install (
     warning("${::fqdn} does not have secrets on master")
   }
 
-  if exists("${base}${path}") or $mandatory {
-    file {$path:
+  if exists("${base}${path_real}") or $mandatory {
+    file {$path_real:
       owner     => $owner,
       group     => $group,
       mode      => $mode,
       show_diff => false,
-      content   => file_on_server("${base}${path}"),
+      content   => file_on_server("${base}${path_real}"),
     }
 
     if $::selinux {
-      File[$path] {
+      File[$path_real] {
         selrange => $selrange,
         selrole  => $selrole,
         seltype  => $seltype,
@@ -42,6 +52,6 @@ define secrets::install (
       }
     }
   } else {
-    notice ("Did not deploy ${path} for ${::fqdn} does not exist in ${secret_store}")
+    notice ("Did not deploy ${path_real} for ${::fqdn} does not exist in ${secret_store}")
   }
 }
