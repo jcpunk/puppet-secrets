@@ -123,7 +123,7 @@ The most fancy version I can think of looks like:
                                                           secret_store   => '/my/private/directory',
                                                           notify_service => [ Service['sshd'], ],
                                                          },
-                        '/etc/ssh//etc/ssh/ssh_host_ed25519_key' => {
+                        '/etc/ssh/ssh_host_ed25519_key' => {
                                                           owner => 'root',
                                                           group => 'root',
                                                           mode  => '0400',           
@@ -131,7 +131,7 @@ The most fancy version I can think of looks like:
                                                           secret_store   => '/my/other/directory',
                                                           notify_service => [ Service['sshd'], ],
                                                          },
-                        '/etc/ssh//etc/ssh/ssh_host_ed25519_key.pub' => {
+                        '/etc/ssh/etc/ssh/ssh_host_ed25519_key.pub' => {
                                                           owner => 'root',
                                                           group => 'root',
                                                           mode  => '0444',           
@@ -139,6 +139,21 @@ The most fancy version I can think of looks like:
                                                           secret_store   => '/my/other/directory',
                                                           notify_service => [ Service['sshd'], ],
                                                          },
+                        '/etc/pki/tls/${::hostname}.crt' => {
+                                                          owner => 'root',
+                                                          group => 'root',
+                                                          mode  => '0444',           
+                                                          mandatory => false,
+                                                          notify_service => [ Service['httpd'], ],
+                                                         },
+                        '/etc/pki/tls/${::fqdn}.key' => {
+                                                          owner => 'root',
+                                                          group => 'root',
+                                                          mode  => '0400',           
+                                                          mandatory => false,
+                                                          notify_service => [ Service['httpd'], ],
+                                                         },
+
 
   }
 
@@ -150,6 +165,9 @@ are missing, the report includes a notice that nothing happend.
 
 Once done, it will restart the sshd service,
 though if Service['sshd'] doesn't exist, your catalog will crash.
+
+It will also deploy public/private keys where the filename is
+determined from the system hostname/fqdn facts and tell Service['httpd'].
 
 ## Reference
 
