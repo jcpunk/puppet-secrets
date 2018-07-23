@@ -86,6 +86,7 @@ nodes.
 
 The most fancy version I can think of looks like:
 
+```
   class {'secrets':
     manage_repo   => true,
     secrets_repos => {'git://somehost/example.git' => {
@@ -156,6 +157,7 @@ The most fancy version I can think of looks like:
 
 
   }
+```
 
 In this example we check out two repos and deploy our RSA keys to everyone,
 and our ED25519 to anyone who has them stored.
@@ -172,6 +174,7 @@ determined from the system hostname/fqdn facts and tell Service['httpd'].
 ## Reference
 
 ### Defaults if no value is specified
+```
   $manage_repo = false
   $secrets_repos = {}
 
@@ -200,46 +203,51 @@ determined from the system hostname/fqdn facts and tell Service['httpd'].
     secret_store   => $repo_defaults['as_secret_store'],
     notify_service => undef,
   }
+```
 
 ### Class: secrets
 Valid arguments:
-. manage_repo
-. secrets_repos
-. repo_defaults
-. install_secrets
-. secrets_defaults
+ * manage_repo
+ * secrets_repos
+ * repo_defaults
+ * install_secrets
+ * secrets_defaults
 
 Automatically includes all relevent sub classes and resources
 
 ### Class: secrets::repo
 Valid arguments:
-. secrets_repos
-. repo_defaults
+
+ * secrets_repos
+ * repo_defaults
 
 ### Class: secrets::install
 Valid arguments:
-. install_secrets
-. secrets_defaults
+
+ * install_secrets
+ * secrets_defaults
 
 ### Define secrets::resources::install
-Valid argumetns:
-. path
-. owner
-. group
-. mode
-. notify_service
-. secret_store
-. mandatory
+Valid arguments:
+
+ * path
+ * owner
+ * group
+ * mode
+ * notify_service
+ * secret_store
+ * mandatory
 
 ### Define secrets::resources::repo
-Valid argumetns:
-. repo_provider
-. repo_user
-. manage_secret_store
-. secret_store
-. secret_store_owner
-. secret_store_group
-. secret_store_mode
+Valid arguments:
+
+ * repo_provider
+ * repo_user
+ * manage_secret_store
+ * secret_store
+ * secret_store_owner
+ * secret_store_group
+ * secret_store_mode
 
 ## Limitations
 
