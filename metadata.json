@@ -1,6 +1,6 @@
 {
   "name": "jcpunk-secrets",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "jcpunk",
   "summary": "A puppet module for dealing with secrets",
   "license": "Apache 2.0",

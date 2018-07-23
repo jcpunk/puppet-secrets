@@ -21,9 +21,8 @@ define secrets::install (
   $fqdn_replace_string = join(['$', '{::fqdn}'], '')
   $hostname_replace_string = join(['$', '{::hostname}'], '')
 
-  $path_fqdn = regsubst($path, $fqdn_replace_string, $::fqdn, 'G')
-  $path_hostname = regsubst($path_fqdn, $hostname_replace_string, $::hostname, 'G')
-
+  $path_fqdn = regsubst($path, $fqdn_replace_string, "${::fqdn}", 'G')
+  $path_hostname = regsubst($path_fqdn, $hostname_replace_string, "${::hostname}", 'G')
 
   $path_real = $path_hostname
 
@@ -41,15 +40,10 @@ define secrets::install (
       mode      => $mode,
       show_diff => false,
       content   => file_on_server("${base}${path_real}"),
-    }
-
-    if $::selinux {
-      File[$path_real] {
-        selrange => $selrange,
-        selrole  => $selrole,
-        seltype  => $seltype,
-        seluser  => $seluser,
-      }
+      selrange  => $selrange,
+      selrole   => $selrole,
+      seltype   => $seltype,
+      seluser   => $seluser,
     }
   } else {
     notice ("Did not deploy ${path_real} for ${::fqdn} does not exist in ${secret_store}")
