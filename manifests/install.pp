@@ -17,15 +17,6 @@ define secrets::install (
 
   $base = "${secret_store}/${::fqdn}"
 
-  # yes I really want the literal non-interp string
-  $fqdn_replace_string = join(['$', '{::fqdn}'], '')
-  $hostname_replace_string = join(['$', '{::hostname}'], '')
-
-  $path_fqdn = regsubst($path, $fqdn_replace_string, "${::fqdn}", 'G')
-  $path_hostname = regsubst($path_fqdn, $hostname_replace_string, "${::hostname}", 'G')
-
-  $path_real = $path_hostname
-
   if ! exists($base) {
     notify {"missing base ${::fqdn}":
       message => "${::fqdn} does not have secrets on master",
@@ -39,7 +30,7 @@ define secrets::install (
       group     => $group,
       mode      => $mode,
       show_diff => false,
-      content   => file_on_server("${base}${path_real}"),
+      content   => file_on_server(template("secrets/filename.erb")),
       selrange  => $selrange,
       selrole   => $selrole,
       seltype   => $seltype,
