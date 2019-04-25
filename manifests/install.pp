@@ -5,7 +5,6 @@ define secrets::install (
   $owner = $secrets::secrets_defaults['owner'],
   $group = $secrets::secrets_defaults['group'],
   $mode = $secrets::secrets_defaults['mode'],
-  $selrange = $secrets::secrets_defaults['selrange'],
   $selrole = $secrets::secrets_defaults['selrole'],
   $seltype = $secrets::secrets_defaults['seltype'],
   $seluser = $secrets::secrets_defaults['seluser'],
