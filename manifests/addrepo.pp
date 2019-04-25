@@ -1,4 +1,4 @@
-# == Define secrets::repo
+# == Define secrets::addrepo
 define secrets::addrepo (
   $repo_provider         = $::secrets::repo_defaults['repo_provider'],
   $repo_user             = $::secrets::repo_defaults['repo_user'],

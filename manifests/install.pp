@@ -9,6 +9,7 @@ define secrets::install (
   $selrole = $secrets::secrets_defaults['selrole'],
   $seltype = $secrets::secrets_defaults['seltype'],
   $seluser = $secrets::secrets_defaults['seluser'],
+  $selrange = $secrets::secrets_defaults['selrange'],
   $secret_store = $secrets::secrets_defaults['secret_store'],
   $mandatory = $secrets::secrets_defaults['mandatory'],
 ) {
