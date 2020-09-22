@@ -1,51 +1,71 @@
 {
   "name": "jcpunk-secrets",
-  "version": "0.2.6",
-  "author": "jcpunk",
-  "summary": "A puppet module for dealing with secrets",
-  "license": "Apache 2.0",
+  "version": "0.3.0",
+  "author": "Pat Riehecky",
+  "summary": "Manage deployment of secrets from a patterned directory",
+  "license": "Apache-2.0",
   "source": "https://github.com/jcpunk/puppet-secrets",
-  "project_page": "https://github.com/jcpunk/puppet-secrets",
-  "issues_url": "https://github.com/jcpunk/puppet-secrets/issues",
-  "tags": ["secrets"],
   "dependencies": [
-    { "name": "puppetlabs-vcsrepo", "version_range": ">= 1.0.0" },
-    { "name": "jcpunk-file_on_server", "version_range": ">= 0.1.2" },
-    { "name": "puppetlabs-stdlib", "version_range": ">= 1.0.0" }
-  ],
-  "requirements": [
-    { "name": "puppet",
-      "version_requirement": ">=3.8.0 < 6.0.0" }
+    { "name": "puppetlabs-stdlib", "version_requirement": ">= 6.0.0 < 7.0.0" },
+    { "name": "puppet-posix_acl", "version_requirement": ">= 1.0.0 < 1.1.0" }
   ],
   "operatingsystem_support": [
     {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [ "6", "7" ]
-    },
-    {
       "operatingsystem": "CentOS",
-      "operatingsystemrelease": [ "6", "7" ]
+      "operatingsystemrelease": [
+        "7"
+      ]
     },
     {
       "operatingsystem": "OracleLinux",
-      "operatingsystemrelease": [ "6", "7" ]
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "8"
+      ]
     },
     {
       "operatingsystem": "Scientific",
-      "operatingsystemrelease": [ "6", "7" ]
-    },
-    {
-      "operatingsystem": "SLES",
-      "operatingsystemrelease": [ "10 SP4", "11 SP1", "12" ]
+      "operatingsystemrelease": [
+        "7"
+      ]
     },
     {
       "operatingsystem": "Debian",
-      "operatingsystemrelease": [ "7", "8" ]
+      "operatingsystemrelease": [
+        "9"
+      ]
     },
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [ "14.04", "16.04" ]
+      "operatingsystemrelease": [
+        "18.04"
+      ]
+    },
+    {
+      "operatingsystem": "Fedora",
+      "operatingsystemrelease": [
+        "29"
+      ]
+    },
+    {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [
+        "15"
+      ]
     }
-  ]
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.10.0 < 7.0.0"
+    }
+  ],
+  "pdk-version": "1.18.1",
+  "template-url": "pdk-default#1.18.1",
+  "template-ref": "tags/1.18.1-0-g3d2e75c"
 }
-

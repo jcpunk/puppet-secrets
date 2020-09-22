@@ -1,5 +1,0 @@
-<%
-@mypath = [@base, @path].join('/').gsub('../', '/').gsub('${::fqdn}', @fqdn).gsub('${::hostname}', @hostname).gsub('//','/')
-
--%>
-<%= @mypath -%>

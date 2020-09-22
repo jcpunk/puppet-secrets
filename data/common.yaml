@@ -1,0 +1,13 @@
+---
+secrets::defaults:
+  owner:           root
+  group:           root
+  mode:           '0400'
+  mandatory:       true
+  notify_services: NULL
+  posix_acl:       NULL
+  selrange:        NULL
+  seltype:         NULL
+  seluser:         NULL
+  secretbase: /etc/puppet/secrets/%{::organization}
+  selinux_ignore_defaults: NULL
