@@ -6,17 +6,17 @@
 # @example
 #   class {'secrets':
 #     install => { '/etc/krb5.keytab' => {
-#                       owner => 'root',
-#                       group => 'root',
-#                       mode  => '0400',
-#                       mandatory  => 'true',
-#                       secretbase => '/my/secrets/repo/on/master',
-#                       posix_acl  => { 'action'     => 'set',
+#                       'owner' => 'root',
+#                       'group' => 'root',
+#                       'mode'  => '0400',
+#                       'mandatory'  => 'true',
+#                       'secretbase' => '/my/secrets/repo/on/master',
+#                       'posix_acl'  => { 'action'     => 'set',
 #                                       'permission' => ['group:wheel:r--', ],},
-#                       selrange   => 's0',
-#                       seluser    => 'system_u',
-#                       selrole    => 'object_r',
-#                       seltype    => 'krb5_keytab_t',  },
+#                       'selrange'   => 's0',
+#                       'seluser'    => 'system_u',
+#                       'selrole'    => 'object_r',
+#                       'seltype'    => 'krb5_keytab_t',  },
 #                }
 #   }
 class secrets (

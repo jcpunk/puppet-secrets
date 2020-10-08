@@ -48,8 +48,6 @@ or:
     install => {'/etc/krb5.keytab' => { group => 'kerberos'}
   }
 
-NOTE: If you have an `organization` fact your path will be /etc/puppet/secrets/${::organization}
-
 ## Usage
 
 Some secrets may not be present on all nodes.  For example, ssh added

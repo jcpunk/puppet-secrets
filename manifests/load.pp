@@ -17,27 +17,28 @@
 #     seltype    => 'krb5_keytab_t',
 #   }
 define secrets::load (
-  String               $owner,
-  String               $group,
-  String               $mode,
-  Boolean              $mandatory,
-  Stdlib::Absolutepath $secretbase,
   Stdlib::Absolutepath $path  = $title,
-  Optional[Array]      $notify_services,
-  Optional[Hash]       $posix_acl,
-  Optional[String]     $selrange,
-  Optional[String]     $seluser,
-  Optional[String]     $selrole,
-  Optional[String]     $seltype,
-  Optional[Boolean]    $selinux_ignore_defaults,
+  String               $owner = 'root',
+  String               $group = 'root',
+  String               $mode  = '0400',
+  Boolean              $mandatory  = true,
+  Stdlib::Absolutepath $secretbase = '/etc/puppet/secrets/',
+  Array                $notify_services = [],
+  Hash                 $posix_acl       = {},
+  Boolean              $selinux_ignore_defaults = false,
+  Optional[String]     $selrange = undef,
+  Optional[String]     $seluser  = undef,
+  Optional[String]     $selrole  = undef,
+  Optional[String]     $seltype  = undef,
 ) {
-  $mybase = join([$secretbase, $trusted['hostname']], '/')
+  $mytrustedfullname = join([$trusted['hostname'], $trusted['domain']], '.')
+  $mybase = join([$secretbase, $mytrustedfullname], '/')
 
   if ! find_file($mybase) {
-    notify { "missing base ${trusted['hostname']}":
-      message => "${trusted['hostname']} does not have secrets on puppet master",
+    notify { "missing base for ${mytrustedfullname}":
+      message => "${mytrustedfullname} does not have secrets on puppet master",
     }
-    warning("${trusted['hostname']} does not have secrets on puppet master")
+    warning("${mytrustedfullname} does not have secrets on puppet master")
   }
 
   if $path =~ /\.\.\// {
@@ -46,18 +47,23 @@ define secrets::load (
 
   # yes I want the literal string '${::hostname}'
   $hostname_replace_string = join(['$', '{::hostname}'], '')
-  $real_path = regsubst($path, $secrets::load::hostname_replace_string, $trusted['hostname'], 'G')
 
-  $secret_path = join([$secrets::load::mybase, $secrets::load::path_real], '/')
+  # yes I want the literal string '${::fqdn}'
+  $fqdn_replace_string = join(['$', '{::fqdn}'], '')
+
+  $path_almost_real = regsubst($path, $hostname_replace_string, $mytrustedfullname, 'G')
+  $path_real = regsubst($path_almost_real, $fqdn_replace_string, $trusted['hostname'], 'G')
+
+  $secret_path = join([$mybase, $path_real], '')
 
   if find_file($secret_path) or $mandatory {
-    file { $secrets::load::path_real:
+    file { $path_real:
       owner                   => $owner,
       group                   => $group,
       mode                    => $mode,
       show_diff               => false,
       force                   => true,
-      content                 => file($secret_path),
+      content                 => Sensitive(file($secret_path)),
       selrange                => $selrange,
       seltype                 => $seltype,
       selrole                 => $selrole,
@@ -66,16 +72,16 @@ define secrets::load (
     }
 
     if ! empty($notify_services) {
-      File[$secrets::load::path_real] {
+      File[$path_real] {
         notify => Service[$notify_services],
       }
     }
 
     if ! empty($posix_acl) {
-      $my_acls = { $secrets::load::path_real => $posix_acl }
-      create_resources(posix_acl, $secrets::load::my_acls, { 'require' => File[$secrets::load::path_real] })
+      $my_acls = { $path_real => $posix_acl }
+      create_resources(posix_acl, $my_acls, { 'require' => File[$path_real] })
     }
   } else {
-    notice ("Did not deploy ${secrets::load::path_real} for ${trusted['hostname']} it does not exist on puppet master")
+    notice ("Did not deploy ${path_real} for ${mytrustedfullname} it does not exist on puppet master")
   }
 }

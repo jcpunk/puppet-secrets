@@ -9,5 +9,5 @@ secrets::defaults:
   selrange:        NULL
   seltype:         NULL
   seluser:         NULL
-  secretbase: /etc/puppet/secrets/%{::organization}
+  secretbase: /etc/puppet/secrets
   selinux_ignore_defaults: NULL
