@@ -30,16 +30,7 @@ describe 'secrets::load' do
 
     let(:params) do
       {
-        'owner' => 'root',
-        'group' => 'root',
-        'mode'  => '0400',
-        'mandatory'  => false,
-        'secretbase' => '/etc/puppet/secrets',
-        'seluser'    => 'system_u',
-        'selrole'    => 'object_r',
-        'seltype'    => 'krb5_keytab_t',
-        'selrange'   => 's0',
-        'selinux_ignore_defaults' => true,
+        'mandatory' => false,
       }
     end
 
@@ -64,11 +55,14 @@ describe 'secrets::load' do
         'seltype'    => 'krb5_keytab_t',
         'selrange'   => 's0',
         'selinux_ignore_defaults' => true,
+        'posix_acl' => { 'action' => 'set',
+                         'permission' => ['group:wheel:r--'] },
       }
     end
 
-    it { is_expected.to compile }
     it {
+      is_expected.to compile
+
       is_expected.to contain_file('/etc/krb5.keytab')
         .with('owner' => 'root')
         .with('group' => 'root')
@@ -78,10 +72,12 @@ describe 'secrets::load' do
         .with('seltype'   => 'krb5_keytab_t')
         .with('selrange'  => 's0')
         .with('selinux_ignore_defaults' => true)
+
+      is_expected.to contain_posix_acl('/etc/krb5.keytab')
+        .with('action' => 'set')
+        .with('permission' => ['group:wheel:r--'])
     }
   end
 end
 
 # 'notify_services' => ['sshd'],
-# 'posix_acl'  => { 'action' => 'set',
-#                   'permission' => ['group:wheel:r--'] },
