@@ -45,14 +45,14 @@ define secrets::load (
     fail("The secrets module forbids use of relative paths ('../')")
   }
 
+  # lint:ignore:single_quote_string_with_variables
+  # yes I want the literal string '${::domain}'
   # yes I want the literal string '${::hostname}'
-  $hostname_replace_string = join(['$', '{::hostname}'], '')
-
   # yes I want the literal string '${::fqdn}'
-  $fqdn_replace_string = join(['$', '{::fqdn}'], '')
-
-  $path_almost_real = regsubst($path, $hostname_replace_string, $mytrustedfullname, 'G')
-  $path_real = regsubst($path_almost_real, $fqdn_replace_string, $trusted['hostname'], 'G')
+  $path_domain_path = regsubst($path, '\$\{::domain\}', $trusted['domain'], 'G')
+  $path_hostname_path = regsubst($path_domain_path, '\$\{::hostname\}', $trusted['hostname'], 'G')
+  $path_real = regsubst($path_hostname_path, '\$\{::fqdn\}', $mytrustedfullname, 'G')
+  # lint:endignore
 
   $secret_path = join([$mybase, $path_real], '')
 
@@ -82,6 +82,9 @@ define secrets::load (
       create_resources(posix_acl, $my_acls, { 'require' => File[$path_real] })
     }
   } else {
+    notify { "missing ${path_real} for ${mytrustedfullname}":
+      message => "Did not deploy ${path_real} for ${mytrustedfullname} it does not exist on puppet master",
+    }
     notice ("Did not deploy ${path_real} for ${mytrustedfullname} it does not exist on puppet master")
   }
 }

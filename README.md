@@ -91,7 +91,13 @@ The most fancy version I can think of looks like:
                                                 secret_store   => '/my/other/directory',
                                                 notify_services => [ 'sshd', ],
                                                },
-              '/etc/pki/tls/${::hostname}.crt' => {
+              '/etc/pki/tls/${::domain}.ca' => {
+                                                owner => 'root',
+                                                mode  => '0444',           
+                                                mandatory => false,
+                                                notify_services => [ 'httpd', ],
+                                               },
+              '/etc/pki/tls/${::fqdn}.crt' => {
                                                 owner => 'root',
                                                 mode  => '0444',           
                                                 mandatory => false,
@@ -126,6 +132,10 @@ determined from the system trusted hostname facts and tell `Service['httpd']`.
 
 The key used for `Service['httpd']` will have a POSIX ACL set to let the
 `wheel` group also read the file.
+
+The literal strings `${::domain}`, `${::fqdn}`, `${::hostname}` will be
+converted to their fact values if they are not done so automatically by
+your parameter source.
 
 ## Limitations
 
