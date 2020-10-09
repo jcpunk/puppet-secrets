@@ -25,6 +25,27 @@ describe 'secrets::load' do
     end
   end
 
+  context 'not mandatory is not a failure' do
+    let(:title) { '/etc/krb5.keytab' }
+
+    let(:params) do
+      {
+        'owner' => 'root',
+        'group' => 'root',
+        'mode'  => '0400',
+        'mandatory'  => false,
+        'secretbase' => '/etc/puppet/secrets',
+        'seluser'    => 'system_u',
+        'selrole'    => 'object_r',
+        'seltype'    => 'krb5_keytab_t',
+        'selrange'   => 's0',
+        'selinux_ignore_defaults' => true,
+      }
+    end
+
+    it { is_expected.to compile }
+  end
+
   context 'lots of internal options' do
     let(:pre_condition) do
       'function file($name) { return \'testdata\' }'
