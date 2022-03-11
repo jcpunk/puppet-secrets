@@ -1,6 +1,6 @@
 {
   "name": "jcpunk-secrets",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Pat Riehecky",
   "summary": "Manage deployment of secrets from a patterned directory",
   "license": "Apache-2.0",
@@ -9,67 +9,46 @@
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 6.0.0 < 7.0.0"
+      "version_requirement": ">= 6.0.0 < 9.0.0"
     },
     {
       "name": "puppet-posix_acl",
-      "version_requirement": ">= 1.0.0 < 1.1.0"
+      "version_requirement": ">= 1.0.0 < 2.1.0"
     }
   ],
   "operatingsystem_support": [
     {
-      "operatingsystem": "CentOS",
-      "operatingsystemrelease": [
-        "7"
-      ]
+      "operatingsystem": "CentOS"
     },
     {
-      "operatingsystem": "OracleLinux",
-      "operatingsystemrelease": [
-        "7"
-      ]
+      "operatingsystem": "OracleLinux"
     },
     {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [
-        "8"
-      ]
+      "operatingsystem": "RedHat"
     },
     {
-      "operatingsystem": "Scientific",
-      "operatingsystemrelease": [
-        "7"
-      ]
+      "operatingsystem": "Scientific"
     },
     {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
-        "9"
-      ]
+      "operatingsystem": "Debian"
     },
     {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [
-        "18.04"
-      ]
+      "operatingsystem": "Ubuntu"
     },
     {
-      "operatingsystem": "Fedora",
-      "operatingsystemrelease": [
-        "29"
-      ]
+      "operatingsystem": "Fedora"
     },
     {
-      "operatingsystem": "SLES",
-      "operatingsystemrelease": [
-        "15"
-      ]
+      "operatingsystem": "SLES"
+    },
+    {
+      "operatingsystem": "Gentoo"
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.10.0 < 7.0.0"
+      "version_requirement": ">= 4.10.0 < 8.0.0"
     }
   ],
   "pdk-version": "1.18.1",
