@@ -22,7 +22,7 @@ define secrets::load (
   String               $group = 'root',
   String               $mode  = '0400',
   Boolean              $mandatory  = true,
-  Stdlib::Absolutepath $secretbase = '/etc/puppet/secrets/',
+  Stdlib::Absolutepath $secretbase = '/etc/puppetlabs/secrets/',
   Array                $notify_services = [],
   Hash                 $posix_acl       = {},
   Boolean              $selinux_ignore_defaults = false,
