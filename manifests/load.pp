@@ -2,6 +2,33 @@
 #
 # Find the secret on the system and make the relevant Files
 #
+# @param mandatory
+#   Should the catalog crash if this secret doesn't exist
+# @param notify_services
+#   Service **titles** to try and notify if this changes.
+# @param posix_acl
+#   Set these posix acls (see posix_acl resource)
+# @param secretbase
+#   The directory to use as the base to start the secret search
+# @param path
+#   Passed directly to the `file` resource
+# @param owner
+#   Passed directly to the `file` resource
+# @param group
+#   Passed directly to the `file` resource
+# @param mode
+#   Passed directly to the `file` resource
+# @param selinux_ignore_defaults
+#   Passed directly to the `file` resource
+# @param selrange
+#   Passed directly to the `file` resource
+# @param seluser
+#   Passed directly to the `file` resource
+# @param selrole
+#   Passed directly to the `file` resource
+# @param seltype
+#   Passed directly to the `file` resource
+#
 # @example
 #   secrets::load { '/etc/krb5.keytab':
 #     owner => 'root',

@@ -3,6 +3,11 @@
 # This class will fetch secrets from the puppet master
 # that follow a specific layout.
 #
+# @param install
+#   Secrets to install on the system
+# @param defaults
+#   Passed as a list of defaults to the installed secrets
+#
 # @example
 #   class {'secrets':
 #     install => { '/etc/krb5.keytab' => {

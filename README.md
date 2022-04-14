@@ -25,28 +25,68 @@ These are items that you might not be able to store with your manifests.
 ### Setup Requirements
 
 Ultimately this module simply looks for `${secret_store}/$trusted['hostname']/<path>`
-*on your puppet master* and pushes it out to the the node.
+**on your puppet master** and pushes it out to the the node.
 
-If your secrets are in a repo, you can use the puppetlabs-vcsrepo type to check them out.
+You can setup an [encrypted git repo](https://github.com/jcpunk/encrypted-git-template) to store things.
+
+If your secrets are in a repo, you can use the [puppetlabs-vcsrepo](https://forge.puppet.com/modules/puppetlabs/vcsrepo) type to check them out.
+
 
 ### Beginning with secrets
 
 For the most basic configuration you can create a secret store with the following commands:
 
-  mkdir -p /etc/puppet/secrets
-  mkdir -p /etc/puppet/secrets/myhostname.example.com/etc/
-  cat /etc/krb5.keytab > /etc/puppet/secrets/myhostname.example.com/etc/krb5.keytab
+```shell
+mkdir -p /etc/puppet/secrets
+mkdir -p /etc/puppet/secrets/myhostname.example.com/etc/
+cat /etc/krb5.keytab > /etc/puppet/secrets/myhostname.example.com/etc/krb5.keytab
+```
 
 Then import the following class:
 
-  class {'secrets':
-    install => {'/etc/krb5.keytab'}
-  }
+```puppet
+class {'secrets':
+  install => {'/etc/krb5.keytab'}
+}
+```
 
 or:
-  class {'secrets':
-    install => {'/etc/krb5.keytab' => { group => 'kerberos'}
-  }
+
+```puppet
+class {'secrets':
+  install => {'/etc/krb5.keytab' => { group => 'kerberos'}
+}
+```
+
+hiera is similar:
+
+```yaml
+secrets::load:
+  /etc/krb5.keytab:
+    group: kerberos
+    notify_services:
+      - sshd
+```
+
+#### Shared secrets
+
+I don't like the idea of letting a host fech secrets from a non-host specific
+directory.  But for shared secrets (like the HTTPS cert for a load balanced cluser)
+there needs to be some sort of plan.
+
+My suggestion, is to use symbolic links to a directory containing the shared
+secrets.  This keeps the secrets in one place but also makes clear restrictions
+on which hosts can access things.
+
+```shell
+├── hostA.example.com
+│   └── example -> ../my_shared_secrets/lbhost.example.com/example
+├── hostB.example.com
+│   └── example -> ../my_shared_secrets/lbhost.example.com/example
+└── my_shared_secrets
+    └── lbhost.example.com
+        └── example
+```
 
 ## Usage
 
