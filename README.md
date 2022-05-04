@@ -37,9 +37,9 @@ If your secrets are in a repo, you can use the [puppetlabs-vcsrepo](https://forg
 For the most basic configuration you can create a secret store with the following commands:
 
 ```shell
-mkdir -p /etc/puppet/secrets
-mkdir -p /etc/puppet/secrets/myhostname.example.com/etc/
-cat /etc/krb5.keytab > /etc/puppet/secrets/myhostname.example.com/etc/krb5.keytab
+mkdir -p /etc/puppetlabs/secrets
+mkdir -p /etc/puppetlabs/secrets/myhostname.example.com/etc/
+cat /etc/krb5.keytab > /etc/puppetlabs/secrets/myhostname.example.com/etc/krb5.keytab
 ```
 
 Then import the following class:
@@ -70,7 +70,7 @@ secrets::load:
 
 #### Shared secrets
 
-I don't like the idea of letting a host fech secrets from a non-host specific
+I don't like the idea of letting a host fetch secrets from a non-host specific
 directory.  But for shared secrets (like the HTTPS cert for a load balanced cluser)
 there needs to be some sort of plan.
 

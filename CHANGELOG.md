@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.0.0
+
+**Features**
+
+* Move secrets under /etc/puppetlabs/ by default
+
+**Bugfixes**
+
+* Fix typos in documentation
+
+**Known Issues**
+
 ## Release 0.3.1
 
 **Features**
