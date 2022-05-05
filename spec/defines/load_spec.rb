@@ -31,7 +31,6 @@ describe 'secrets::load' do
     end
 
     it { is_expected.to compile }
-    it { is_expected.to contain_notify('missing /etc/krb5.keytab for testhost.example.com') }
   end
 
   context 'lots of internal options' do
