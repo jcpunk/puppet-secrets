@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.0.4
+
+**Bugfixes**
+
+* Missed a notify from 1.0.2
+
 ## Release 1.0.3
 
 **Bugfixes**
