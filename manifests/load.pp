@@ -62,9 +62,6 @@ define secrets::load (
   $mybase = join([$secretbase, $mytrustedfullname], '/')
 
   if ! find_file($mybase) {
-    notify { "missing base for ${mytrustedfullname}":
-      message => "${mytrustedfullname} does not have secrets on puppet master",
-    }
     warning("${mytrustedfullname} does not have secrets on puppet master")
   }
 
