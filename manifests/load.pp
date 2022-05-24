@@ -44,19 +44,19 @@
 #     seltype    => 'krb5_keytab_t',
 #   }
 define secrets::load (
-  Stdlib::Absolutepath $path  = $title,
-  String               $owner = 'root',
-  String               $group = 'root',
-  String               $mode  = '0400',
-  Boolean              $mandatory  = true,
-  Stdlib::Absolutepath $secretbase = '/etc/puppetlabs/secrets/',
-  Array                $notify_services = [],
-  Hash                 $posix_acl       = {},
-  Boolean              $selinux_ignore_defaults = false,
-  Optional[String]     $selrange = undef,
-  Optional[String]     $seluser  = undef,
-  Optional[String]     $selrole  = undef,
-  Optional[String]     $seltype  = undef,
+  Stdlib::Absolutepath    $path  = $title,
+  Variant[String,Integer] $owner = 'root',
+  Variant[String,Integer] $group = 'root',
+  String                  $mode  = '0400',
+  Boolean                 $mandatory  = true,
+  Stdlib::Absolutepath    $secretbase = '/etc/puppetlabs/secrets/',
+  Array                   $notify_services = [],
+  Hash                    $posix_acl       = {},
+  Boolean                 $selinux_ignore_defaults = false,
+  Optional[String]        $selrange = undef,
+  Optional[String]        $seluser  = undef,
+  Optional[String]        $selrole  = undef,
+  Optional[String]        $seltype  = undef,
 ) {
   $mytrustedfullname = join([$trusted['hostname'], $trusted['domain']], '.')
   $mybase = join([$secretbase, $mytrustedfullname], '/')
@@ -98,13 +98,13 @@ define secrets::load (
       selinux_ignore_defaults => $selinux_ignore_defaults,
     }
 
-    if ! empty($notify_services) {
+    unless empty($notify_services) {
       File[$path_real] {
         notify => Service[$notify_services],
       }
     }
 
-    if ! empty($posix_acl) {
+    unless empty($posix_acl) {
       $my_acls = { $path_real => $posix_acl }
       create_resources(posix_acl, $my_acls, { 'require' => File[$path_real] })
     }

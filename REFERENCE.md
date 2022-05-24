@@ -146,7 +146,7 @@ Default value: `$title`
 
 ##### <a name="owner"></a>`owner`
 
-Data type: `String`
+Data type: `Variant[String,Integer]`
 
 Passed directly to the `file` resource
 
@@ -154,7 +154,7 @@ Default value: `'root'`
 
 ##### <a name="group"></a>`group`
 
-Data type: `String`
+Data type: `Variant[String,Integer]`
 
 Passed directly to the `file` resource
 

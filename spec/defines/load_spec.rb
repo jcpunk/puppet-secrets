@@ -79,6 +79,28 @@ describe 'secrets::load' do
     }
   end
 
+  context 'integer ownership' do
+    let(:pre_condition) do
+      'function file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/krb5.keytab' }
+    let(:params) do
+      {
+        'owner' => 0,
+        'group' => 0,
+      }
+    end
+
+    it { is_expected.to compile }
+
+    it {
+      is_expected.to contain_file('/etc/krb5.keytab')
+        .with('owner' => 0)
+        .with('group' => 0)
+    }
+  end
+
   context 'Try to subscribe to the ssh service' do
     let(:pre_condition) do
       'function file($name) { return \'testdata\' }'
