@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.1.0
+
+**Features**
+
+* Using a resource collector for notifications now
+
+**Bugfixes**
+
+* Filenames with `/./` in them now have that removed.
+
 ## Release 1.0.4
 
 **Bugfixes**

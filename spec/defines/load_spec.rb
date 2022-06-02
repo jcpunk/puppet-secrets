@@ -103,18 +103,42 @@ describe 'secrets::load' do
 
   context 'Try to subscribe to the ssh service' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      <<-PRECOND
+        function file($name) { return 'testdata' }
+        service {'sshd.service': }
+      PRECOND
+    end
+
+    let(:title) { '/./etc/./krb5.keytab' }
+
+    let(:params) do
+      {
+        'notify_services' => ['sshd.service'],
+      }
+    end
+
+    # it { pp catalogue.resources }
+    it { is_expected.to contain_file('/etc/krb5.keytab').with_notify(['Service[sshd.service]']) }
+  end
+
+  context 'Try to subscribe to two services' do
+    let(:pre_condition) do
+      <<-PRECOND
+        function file($name) { return 'testdata' }
+        service {'sshd.service': }
+        service {'httpd.service': }
+      PRECOND
     end
 
     let(:title) { '/etc/./krb5.keytab' }
 
     let(:params) do
       {
-        'notify_services' => ['sshd'],
+        'notify_services' => ['sshd.service', 'httpd.service'],
       }
     end
 
-    it { is_expected.to raise_error(Puppet::Error, %r{Service\[sshd\]}) }
+    it { is_expected.to contain_file('/etc/krb5.keytab').with_notify(['Service[sshd.service]', 'Service[httpd.service]']) }
   end
 
   context 'Try to use relative paths' do

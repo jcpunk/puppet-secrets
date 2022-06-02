@@ -69,11 +69,18 @@ define secrets::load (
     fail("The secrets module forbids use of relative paths ('../')")
   }
 
+  $no_dot_path = regsubst($path, '/\./', '/', 'G')
+
+  $my_dirname = dirname($no_dot_path)
+  $my_basename = basename($no_dot_path)
+
+  $normal_path = "${my_dirname}/${my_basename}"
+
   # lint:ignore:single_quote_string_with_variables
   # yes I want the literal string '${::domain}'
   # yes I want the literal string '${::hostname}'
   # yes I want the literal string '${::fqdn}'
-  $path_domain_path = regsubst($path, '\$\{::domain\}', $trusted['domain'], 'G')
+  $path_domain_path = regsubst($normal_path, '\$\{::domain\}', $trusted['domain'], 'G')
   $path_hostname_path = regsubst($path_domain_path, '\$\{::hostname\}', $trusted['hostname'], 'G')
   $path_real = regsubst($path_hostname_path, '\$\{::fqdn\}', $mytrustedfullname, 'G')
   # lint:endignore
@@ -96,9 +103,7 @@ define secrets::load (
     }
 
     unless empty($notify_services) {
-      File[$path_real] {
-        notify => Service[$notify_services],
-      }
+      File[$path_real] ~> $notify_services.map |$srv| { Service <| title == $srv |> }
     }
 
     unless empty($posix_acl) {
