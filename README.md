@@ -25,7 +25,7 @@ These are items that you might not be able to store with your manifests.
 ### Setup Requirements
 
 Ultimately this module simply looks for `${secret_store}/$trusted['hostname']/<path>`
-**on your puppet master** and pushes it out to the the node.
+**on your puppet server** and pushes it out to the the node.
 
 You can setup an [encrypted git repo](https://github.com/jcpunk/encrypted-git-template) to store things.
 

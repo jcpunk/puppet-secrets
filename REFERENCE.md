@@ -16,7 +16,7 @@
 
 ### <a name="secrets"></a>`secrets`
 
-This class will fetch secrets from the puppet master
+This class will fetch secrets from the puppet server
 that follow a specific layout.
 
 #### Examples
@@ -30,7 +30,7 @@ class {'secrets':
                     'group' => 'root',
                     'mode'  => '0400',
                     'mandatory'  => 'true',
-                    'secretbase' => '/my/secrets/repo/on/master',
+                    'secretbase' => '/my/secrets/repo/on/server',
                     'posix_acl'  => { 'action'     => 'set',
                                     'permission' => ['group:wheel:r--', ],},
                     'selrange'   => 's0',
@@ -76,7 +76,7 @@ secrets::load { '/etc/krb5.keytab':
   group => 'root',
   mode  => '0400',
   mandatory  => 'true',
-  secretbase => '/my/secrets/repo/on/master',
+  secretbase => '/my/secrets/repo/on/server',
   posix_acl  => { 'action'     => 'set',
                   'permission' => ['group:wheel:r--', ],},
   selrange   => 's0',

@@ -1,6 +1,6 @@
 # @summary Manage secrets on a given host
 #
-# This class will fetch secrets from the puppet master
+# This class will fetch secrets from the puppet server
 # that follow a specific layout.
 #
 # @param install
@@ -15,7 +15,7 @@
 #                       'group' => 'root',
 #                       'mode'  => '0400',
 #                       'mandatory'  => 'true',
-#                       'secretbase' => '/my/secrets/repo/on/master',
+#                       'secretbase' => '/my/secrets/repo/on/server',
 #                       'posix_acl'  => { 'action'     => 'set',
 #                                       'permission' => ['group:wheel:r--', ],},
 #                       'selrange'   => 's0',

@@ -35,7 +35,7 @@
 #     group => 'root',
 #     mode  => '0400',
 #     mandatory  => 'true',
-#     secretbase => '/my/secrets/repo/on/master',
+#     secretbase => '/my/secrets/repo/on/server',
 #     posix_acl  => { 'action'     => 'set',
 #                     'permission' => ['group:wheel:r--', ],},
 #     selrange   => 's0',
@@ -62,7 +62,7 @@ define secrets::load (
   $mybase = join([$secretbase, $mytrustedfullname], '/')
 
   if ! find_file($mybase) {
-    warning("${mytrustedfullname} does not have secrets on puppet master")
+    warning("${mytrustedfullname} does not have secrets on puppet server")
   }
 
   if $path =~ /\.\.\// {
@@ -111,6 +111,6 @@ define secrets::load (
       create_resources(posix_acl, $my_acls, { 'require' => File[$path_real] })
     }
   } else {
-    notice ("Did not deploy ${path_real} for ${mytrustedfullname} it does not exist on puppet master")
+    notice ("Did not deploy ${path_real} for ${mytrustedfullname} it does not exist on puppet server")
   }
 }
