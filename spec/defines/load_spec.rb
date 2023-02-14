@@ -13,7 +13,7 @@ describe 'secrets::load' do
 
   context 'with minimal args' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/krb5.keytab' }
@@ -35,7 +35,7 @@ describe 'secrets::load' do
 
   context 'lots of internal options' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/krb5.keytab' }
@@ -81,7 +81,7 @@ describe 'secrets::load' do
 
   context 'integer ownership' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/krb5.keytab' }
@@ -104,7 +104,7 @@ describe 'secrets::load' do
   context 'Try to subscribe to the ssh service' do
     let(:pre_condition) do
       <<-PRECOND
-        function file($name) { return 'testdata' }
+        function binary_file($name) { return 'testdata' }
         service {'sshd.service': }
       PRECOND
     end
@@ -124,7 +124,7 @@ describe 'secrets::load' do
   context 'Try to subscribe to two services' do
     let(:pre_condition) do
       <<-PRECOND
-        function file($name) { return 'testdata' }
+        function binary_file($name) { return 'testdata' }
         service {'sshd.service': }
         service {'httpd.service': }
       PRECOND
@@ -143,7 +143,7 @@ describe 'secrets::load' do
 
   context 'Try to use relative paths' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/.././krb5.keytab' }
@@ -153,7 +153,7 @@ describe 'secrets::load' do
 
   context 'Try to swap in $::hostname' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/${::hostname}.crt' }
@@ -169,7 +169,7 @@ describe 'secrets::load' do
 
   context 'Try to swap in $::fqdn' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/${::fqdn}.crt' }
@@ -185,7 +185,7 @@ describe 'secrets::load' do
 
   context 'Try to swap in $::domain' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/${::domain}.ca' }
@@ -201,7 +201,7 @@ describe 'secrets::load' do
 
   context 'Try to swap in $::hostname $::domain and $::fqdn' do
     let(:pre_condition) do
-      'function file($name) { return \'testdata\' }'
+      'function binary_file($name) { return \'testdata\' }'
     end
 
     let(:title) { '/etc/${::domain}/${::hostname}/${::fqdn}' }

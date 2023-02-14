@@ -94,7 +94,7 @@ define secrets::load (
       mode                    => $mode,
       show_diff               => false,
       force                   => true,
-      content                 => Sensitive(file($secret_path)),
+      content                 => Sensitive(binary_file($secret_path)),
       selrange                => $selrange,
       seltype                 => $seltype,
       selrole                 => $selrole,

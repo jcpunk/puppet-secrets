@@ -12,9 +12,10 @@ describe 'secrets' do
   let(:node) { 'testhost.example.com' }
 
   let(:pre_condition) do
-    'function file($name) { return \'testdata\' }'
+    'function binary_file($name) { return \'testdata\' }'
   end
 
+  # the real interesting stuff is all tested in the define
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
