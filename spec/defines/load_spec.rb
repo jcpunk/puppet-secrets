@@ -294,4 +294,20 @@ describe 'secrets::load' do
     it { is_expected.not_to contain_file('/etc/${::networking[domain]}/${::networking[hostname]}/${::networking[fqdn]}') }
     it { is_expected.to contain_file('/etc/example.com/testhost/testhost.example.com') }
   end
+
+  context 'Try to swap in $::networking.hostname $::networking.domain and $::networking.fqdn' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/${::networking.domain}/${::networking.hostname}/${::networking.fqdn}' }
+
+    it { is_expected.to compile }
+
+    it { is_expected.not_to contain_notify('missing /etc/${::networking.domain}/${::networking.hostname}/${::networking.fqdn} for testhost.example.com') }
+    it { is_expected.not_to contain_notify('missing /etc/example.com/testhost/testhost.example.com for testhost.example.com') }
+
+    it { is_expected.not_to contain_file('/etc/${::networking.domain}/${::networking.hostname}/${::networking.fqdn}') }
+    it { is_expected.to contain_file('/etc/example.com/testhost/testhost.example.com') }
+  end
 end

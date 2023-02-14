@@ -80,16 +80,25 @@ define secrets::load (
   # yes I want the literal string '${::domain}'
   # yes I want the literal string '${::hostname}'
   # yes I want the literal string '${::fqdn}'
-  # yes I want the literal string '${::networking['domain']}'
-  # yes I want the literal string '${::networking['hostname']}'
-  # yes I want the literal string '${::networking['fqdn']}'
+  # yes I want the literal string '${::networking['domain']}', with either quotes or not
+  # yes I want the literal string '${::networking['hostname']}', with either quotes or not
+  # yes I want the literal string '${::networking['fqdn']}', with either quotes or not
+  # yes I want the literal string '${::networking.domain}'
+  # yes I want the literal string '${::networking.hostname}'
+  # yes I want the literal string '${::networking.fqdn}'
   $path_legacy_domain = regsubst($normal_path, '\$\{::domain\}', $trusted['domain'], 'G')
   $path_legacy_hostname = regsubst($path_legacy_domain, '\$\{::hostname\}', $trusted['hostname'], 'G')
   $path_legacy_fqdn = regsubst($path_legacy_hostname, '\$\{::fqdn\}', $mytrustedfullname, 'G')
-  $path_domain_path = regsubst($path_legacy_fqdn, '\$\{::networking\[[\'"]?domain[\'"]?\]\}', $trusted['domain'], 'G')
-  $path_hostname_path = regsubst($path_domain_path, '\$\{::networking\[[\'"]?hostname[\'"]?\]\}', $trusted['hostname'], 'G')
-  $path_fqdn = regsubst($path_hostname_path, '\$\{::networking\[[\'"]?fqdn[\'"]?\]\\}', $mytrustedfullname, 'G')
-  $path_real = $path_fqdn
+
+  $path_domain_dict = regsubst($path_legacy_fqdn, '\$\{::networking\[[\'"]?domain[\'"]?\]\}', $trusted['domain'], 'G')
+  $path_hostname_dict = regsubst($path_domain_dict, '\$\{::networking\[[\'"]?hostname[\'"]?\]\}', $trusted['hostname'], 'G')
+  $path_fqdn_dict = regsubst($path_hostname_dict, '\$\{::networking\[[\'"]?fqdn[\'"]?\]\}', $mytrustedfullname, 'G')
+
+  $path_domain_dot = regsubst($path_fqdn_dict, '\$\{::networking\.domain\}', $trusted['domain'], 'G')
+  $path_hostname_dot = regsubst($path_domain_dot, '\$\{::networking\.hostname\}', $trusted['hostname'], 'G')
+  $path_fqdn_dot = regsubst($path_hostname_dot, '\$\{::networking\.fqdn\}', $mytrustedfullname, 'G')
+
+  $path_real = $path_fqdn_dot
   # lint:endignore
 
   $secret_path = join([$mybase, $path_real], '')

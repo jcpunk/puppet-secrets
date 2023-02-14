@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.2.2
+
+**Features**
+
+* Support facter dotted notation
+
 ## Release 1.2.1
 
 **Features**

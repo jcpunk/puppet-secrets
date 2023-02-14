@@ -1,6 +1,6 @@
 {
   "name": "jcpunk-secrets",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "author": "Pat Riehecky",
   "summary": "Manage deployment of secrets from a patterned directory",
   "license": "Apache-2.0",
