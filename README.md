@@ -173,8 +173,8 @@ The key used for `Service['httpd']` will have a POSIX ACL set to let the
 `wheel` group also read the file.
 
 The literal strings `${::domain}`, `${::fqdn}`, `${::hostname}`,
-`${::network[domain]}`, `${::network[fqdn]}`, `${::network[hostname]}`
-`${::network.domain}`, `${::network.fqdn}`, `${::network.hostname}`
+`${::networking[domain]}`, `${::networking[fqdn]}`, `${::networking[hostname]}`
+`${::networking.domain}`, `${::networking.fqdn}`, `${::networking.hostname}`
 will be converted to the values of `$::trusted[domain]`, `$::trusted[hostname]`,
 `$::trusted[hostname].$::trusted[domain]` if they are not converted automatically by
 your parameter source to an explicit value.
