@@ -6,11 +6,11 @@
 
 ### Classes
 
-* [`secrets`](#secrets): Manage secrets on a given host
+- [`secrets`](#secrets): Manage secrets on a given host
 
 ### Defined types
 
-* [`secrets::load`](#secretsload): This type will provide the actual file requested
+- [`secrets::load`](#secretsload): This type will provide the actual file requested
 
 ## Classes
 
@@ -21,7 +21,7 @@ that follow a specific layout.
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 class {'secrets':
@@ -45,8 +45,8 @@ class {'secrets':
 
 The following parameters are available in the `secrets` class:
 
-* [`install`](#install)
-* [`defaults`](#defaults)
+- [`install`](#install)
+- [`defaults`](#defaults)
 
 ##### <a name="install"></a>`install`
 
@@ -68,7 +68,7 @@ Find the secret on the system and make the relevant Files
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 secrets::load { '/etc/krb5.keytab':
@@ -90,19 +90,19 @@ secrets::load { '/etc/krb5.keytab':
 
 The following parameters are available in the `secrets::load` defined type:
 
-* [`mandatory`](#mandatory)
-* [`notify_services`](#notify_services)
-* [`posix_acl`](#posix_acl)
-* [`secretbase`](#secretbase)
-* [`path`](#path)
-* [`owner`](#owner)
-* [`group`](#group)
-* [`mode`](#mode)
-* [`selinux_ignore_defaults`](#selinux_ignore_defaults)
-* [`selrange`](#selrange)
-* [`seluser`](#seluser)
-* [`selrole`](#selrole)
-* [`seltype`](#seltype)
+- [`mandatory`](#mandatory)
+- [`notify_services`](#notify_services)
+- [`posix_acl`](#posix_acl)
+- [`secretbase`](#secretbase)
+- [`path`](#path)
+- [`owner`](#owner)
+- [`group`](#group)
+- [`mode`](#mode)
+- [`selinux_ignore_defaults`](#selinux_ignore_defaults)
+- [`selrange`](#selrange)
+- [`seluser`](#seluser)
+- [`selrole`](#selrole)
+- [`seltype`](#seltype)
 
 ##### <a name="mandatory"></a>`mandatory`
 
@@ -110,7 +110,7 @@ Data type: `Boolean`
 
 Should the catalog crash if this secret doesn't exist
 
-Default value: ``true``
+Default value: `true`
 
 ##### <a name="notify_services"></a>`notify_services`
 
@@ -174,7 +174,7 @@ Data type: `Boolean`
 
 Passed directly to the `file` resource
 
-Default value: ``false``
+Default value: `false`
 
 ##### <a name="selrange"></a>`selrange`
 
@@ -182,7 +182,7 @@ Data type: `Optional[String]`
 
 Passed directly to the `file` resource
 
-Default value: ``undef``
+Default value: `undef`
 
 ##### <a name="seluser"></a>`seluser`
 
@@ -190,7 +190,7 @@ Data type: `Optional[String]`
 
 Passed directly to the `file` resource
 
-Default value: ``undef``
+Default value: `undef`
 
 ##### <a name="selrole"></a>`selrole`
 
@@ -198,7 +198,7 @@ Data type: `Optional[String]`
 
 Passed directly to the `file` resource
 
-Default value: ``undef``
+Default value: `undef`
 
 ##### <a name="seltype"></a>`seltype`
 
@@ -206,5 +206,4 @@ Data type: `Optional[String]`
 
 Passed directly to the `file` resource
 
-Default value: ``undef``
-
+Default value: `undef`
