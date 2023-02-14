@@ -214,4 +214,84 @@ describe 'secrets::load' do
     it { is_expected.not_to contain_file('/etc/${::domain}/${::hostname}/${::fqdn}') }
     it { is_expected.to contain_file('/etc/example.com/testhost/testhost.example.com') }
   end
+
+  context 'Try to swap in $::networking["hostname"]' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/${::networking["hostname"]}.crt' }
+
+    it { is_expected.to compile }
+
+    it { is_expected.not_to contain_notify('missing /etc/${::networking["hostname"]}.crt for testhost.example.com') }
+    it { is_expected.not_to contain_notify('missing /etc/testhost.crt for testhost.example.com') }
+
+    it { is_expected.not_to contain_file('/etc/${::networking["hostname"]}.crt') }
+    it { is_expected.to contain_file('/etc/testhost.crt') }
+  end
+
+  context 'Try to swap in $::networking["fqdn"]' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/${::networking["fqdn"]}.crt' }
+
+    it { is_expected.to compile }
+
+    it { is_expected.not_to contain_notify('missing /etc/${::networking["fqdn"]}.crt for testhost.example.com') }
+    it { is_expected.not_to contain_notify('missing /etc/testhost.example.com.crt for testhost.example.com') }
+
+    it { is_expected.not_to contain_file('/etc/${::networking["fqdn"]}.crt') }
+    it { is_expected.to contain_file('/etc/testhost.example.com.crt') }
+  end
+
+  context 'Try to swap in $::networking["domain"]' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/${::networking["domain"]}.ca' }
+
+    it { is_expected.to compile }
+
+    it { is_expected.not_to contain_notify('missing /etc/${::networking["domain"]}.ca for testhost.example.com') }
+    it { is_expected.not_to contain_notify('missing /etc/example.com.ca for testhost.example.com') }
+
+    it { is_expected.not_to contain_file('/etc/${::networking["domain"]}.ca') }
+    it { is_expected.to contain_file('/etc/example.com.ca') }
+  end
+
+  context 'Try to swap in $::networking[\'hostname\'] $::networking[\'domain\'] and $::networking[\'fqdn\']' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/${::networking[\'domain\']}/${::networking[\'hostname\']}/${::networking[\'fqdn\']}' }
+
+    it { is_expected.to compile }
+
+    it { is_expected.not_to contain_notify('missing /etc/${::networking["domain"]}/${::networking["hostname"]}/${::networking["fqdn"]} for testhost.example.com') }
+    it { is_expected.not_to contain_notify('missing /etc/example.com/testhost/testhost.example.com for testhost.example.com') }
+
+    it { is_expected.not_to contain_file('/etc/${::networking["domain"]}/${::networking["hostname"]}/${::networking["fqdn"]}') }
+    it { is_expected.to contain_file('/etc/example.com/testhost/testhost.example.com') }
+  end
+
+  context 'Try to swap in $::networking[hostname] $::networking[domain] and $::networking[fqdn]' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/${::networking[domain]}/${::networking[hostname]}/${::networking[fqdn]}' }
+
+    it { is_expected.to compile }
+
+    it { is_expected.not_to contain_notify('missing /etc/${::networking[domain]}/${::networking[hostname]}/${::networking[fqdn]} for testhost.example.com') }
+    it { is_expected.not_to contain_notify('missing /etc/example.com/testhost/testhost.example.com for testhost.example.com') }
+
+    it { is_expected.not_to contain_file('/etc/${::networking[domain]}/${::networking[hostname]}/${::networking[fqdn]}') }
+    it { is_expected.to contain_file('/etc/example.com/testhost/testhost.example.com') }
+  end
 end

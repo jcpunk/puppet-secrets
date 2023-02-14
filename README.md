@@ -173,10 +173,15 @@ determined from the system trusted hostname facts and tell `Service['httpd']`.
 The key used for `Service['httpd']` will have a POSIX ACL set to let the
 `wheel` group also read the file.
 
-The literal strings `${::domain}`, `${::fqdn}`, `${::hostname}` will be
-converted to their fact values if they are not done so automatically by
-your parameter source.
+The literal strings `${::domain}`, `${::fqdn}`, `${::hostname}`,
+`${::network[domain]}`, `${::network[fqdn]}`, `${::network[hostname]}`
+will be converted to the values of `$::trusted[domain]`, `$::trusted[hostname]`,
+`$::trusted[hostname].$::trusted[domain]` if they are not converted automatically by
+your parameter source to an explicit value.
 
 ## Limitations
 
 This class tries to only act as a secure file deployment method.
+
+The use of the `$::trusted` facts is by choice to ensure a client cannot swipe
+someone else's secrets.

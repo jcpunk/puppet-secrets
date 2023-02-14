@@ -5,7 +5,7 @@
 # @param mandatory
 #   Should the catalog crash if this secret doesn't exist
 # @param notify_services
-#   Service **titles** to try and notify if this changes.
+#   Service **titles** to try and notify if this changes
 # @param posix_acl
 #   Set these posix acls (see posix_acl resource)
 # @param secretbase
@@ -80,9 +80,16 @@ define secrets::load (
   # yes I want the literal string '${::domain}'
   # yes I want the literal string '${::hostname}'
   # yes I want the literal string '${::fqdn}'
-  $path_domain_path = regsubst($normal_path, '\$\{::domain\}', $trusted['domain'], 'G')
-  $path_hostname_path = regsubst($path_domain_path, '\$\{::hostname\}', $trusted['hostname'], 'G')
-  $path_real = regsubst($path_hostname_path, '\$\{::fqdn\}', $mytrustedfullname, 'G')
+  # yes I want the literal string '${::networking['domain']}'
+  # yes I want the literal string '${::networking['hostname']}'
+  # yes I want the literal string '${::networking['fqdn']}'
+  $path_legacy_domain = regsubst($normal_path, '\$\{::domain\}', $trusted['domain'], 'G')
+  $path_legacy_hostname = regsubst($path_legacy_domain, '\$\{::hostname\}', $trusted['hostname'], 'G')
+  $path_legacy_fqdn = regsubst($path_legacy_hostname, '\$\{::fqdn\}', $mytrustedfullname, 'G')
+  $path_domain_path = regsubst($path_legacy_fqdn, '\$\{::networking\[[\'"]?domain[\'"]?\]\}', $trusted['domain'], 'G')
+  $path_hostname_path = regsubst($path_domain_path, '\$\{::networking\[[\'"]?hostname[\'"]?\]\}', $trusted['hostname'], 'G')
+  $path_fqdn = regsubst($path_hostname_path, '\$\{::networking\[[\'"]?fqdn[\'"]?\]\\}', $mytrustedfullname, 'G')
+  $path_real = $path_fqdn
   # lint:endignore
 
   $secret_path = join([$mybase, $path_real], '')
