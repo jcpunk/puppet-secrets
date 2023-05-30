@@ -1,6 +1,6 @@
 {
   "name": "jcpunk-secrets",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "author": "Pat Riehecky",
   "summary": "Manage deployment of secrets from a patterned directory",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 6.0.0 < 9.0.0"
+      "version_requirement": ">= 6.0.0 < 10.0.0"
     },
     {
       "name": "puppet-posix_acl",
