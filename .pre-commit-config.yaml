@@ -2,12 +2,10 @@ repos:
 - repo: https://github.com/chriskuehl/puppet-pre-commit-hooks.git
   rev: v2.2.0
   hooks:
+    - id: epp-validate
+    - id: erb-validate
     - id: puppet-lint
       args:
         - --fail-on-warnings
         - --no-80chars-check
-- repo: https://github.com/pre-commit/mirrors-prettier
-  rev: v3.0.2
-  hooks:
-    - id: prettier
-      files: ^.*.md$
+    - id: r10k-validate
