@@ -99,6 +99,8 @@ describe 'secrets::load' do
         .with('owner' => 0)
         .with('group' => 0)
     }
+
+    it { is_expected.to have_posix_acl_resource_count(0) }
   end
 
   context 'Try to subscribe to the ssh service' do

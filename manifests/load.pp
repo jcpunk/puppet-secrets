@@ -47,12 +47,14 @@ define secrets::load (
   Stdlib::Absolutepath    $path  = $title,
   Variant[String,Integer] $owner = 'root',
   Variant[String,Integer] $group = 'root',
-  String                  $mode  = '0400',
   Boolean                 $mandatory  = true,
   Stdlib::Absolutepath    $secretbase = '/etc/puppetlabs/secrets/',
   Array                   $notify_services = [],
-  Hash                    $posix_acl       = {},
+  Hash                    $posix_acl = {},
   Boolean                 $selinux_ignore_defaults = false,
+  # lint:ignore:optional_default
+  Optional[String]        $mode  = '0400',
+  # lint:endignore
   Optional[String]        $selrange = undef,
   Optional[String]        $seluser  = undef,
   Optional[String]        $selrole  = undef,
