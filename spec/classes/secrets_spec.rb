@@ -34,6 +34,7 @@ describe 'secrets' do
 
         it { is_expected.to compile }
         it { is_expected.to contain_secrets__load('/etc/krb5.keytab').with('owner' => 'root') }
+        it { is_expected.to have_posix_acl_count(0) }
       end
     end
   end
