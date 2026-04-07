@@ -109,6 +109,7 @@ define secrets::load (
       group                   => $group,
       mode                    => $mode,
       show_diff               => false,
+      backup                  => false,
       force                   => true,
       content                 => Sensitive(binary_file($secret_path)),
       selrange                => $selrange,
