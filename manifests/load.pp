@@ -128,6 +128,6 @@ define secrets::load (
       create_resources(posix_acl, $my_acls, { 'require' => File[$path_real] })
     }
   } else {
-    notice ("Did not deploy ${path_real} for ${mytrustedfullname} it does not exist on puppet server")
+    notice ("Did not deploy ${path_real} for ${mytrustedfullname} it does not exist on puppet server and is not mandatory")
   }
 }
