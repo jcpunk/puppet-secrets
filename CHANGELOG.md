@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 **Bugfixes**
 
 - Explicitly set `backup=false` for secrets
+- Actually permit a null `mode` argument to `secrets::load`
 
 **Features**
 
