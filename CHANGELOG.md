@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 1.3.0
+
+**Bugfixes**
+
+- Explicitly set `backup=false` for secrets
+
+**Features**
+
+-
+
 ## Release 1.2.3
 
 **Features**
