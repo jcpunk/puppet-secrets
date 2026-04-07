@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 
 **Features**
 
--
+- Add `secrets::file` resource for writing secrets out as fetched strings
 
 ## Release 1.2.3
 
