@@ -6,11 +6,13 @@
 
 ### Classes
 
-- [`secrets`](#secrets): Manage secrets on a given host
+* [`secrets`](#secrets): Manage secrets on a given host
 
 ### Defined types
 
-- [`secrets::load`](#secretsload): This type will provide the actual file requested
+* [`secrets::file`](#secrets--file): Manages a file with sensitive content, optional POSIX ACLs,
+and SELinux context attributes.
+* [`secrets::load`](#secrets--load): This type will provide the actual file requested
 
 ## Classes
 
@@ -21,7 +23,7 @@ that follow a specific layout.
 
 #### Examples
 
-#####
+##### 
 
 ```puppet
 class {'secrets':
@@ -45,16 +47,16 @@ class {'secrets':
 
 The following parameters are available in the `secrets` class:
 
-- [`install`](#install)
-- [`defaults`](#defaults)
+* [`install`](#-secrets--install)
+* [`defaults`](#-secrets--defaults)
 
-##### <a name="install"></a>`install`
+##### <a name="-secrets--install"></a>`install`
 
 Data type: `Hash`
 
 Secrets to install on the system
 
-##### <a name="defaults"></a>`defaults`
+##### <a name="-secrets--defaults"></a>`defaults`
 
 Data type: `Hash`
 
@@ -62,13 +64,167 @@ Passed as a list of defaults to the installed secrets
 
 ## Defined types
 
-### <a name="secretsload"></a>`secrets::load`
+### <a name="secrets--file"></a>`secrets::file`
+
+The namevar is a logical descriptor (e.g. 'krb5 keytab for host foo').
+Set $path explicitly when the title is descriptive rather than a file path.
+Defaults to $title when $title is an absolute path.
+Will always produce a File[$absolute_path] resource
+
+#### Examples
+
+##### Descriptive title with explicit path
+
+```puppet
+secrets::file { 'krb5 keytab for host foo':
+  path     => '/etc/krb5.keytab',
+  content  => lookup('secrets::krb5_keytab'),
+  owner    => 'root',
+  group    => 'root',
+  mode     => '0400',
+  posix_acl => {
+    action     => 'set',
+    permission => ['group:wheel:r--'],
+  },
+  seluser  => 'system_u',
+  selrole  => 'object_r',
+  seltype  => 'krb5_keytab_t',
+  selrange => 's0',
+}
+```
+
+##### Path as title (shorthand)
+
+```puppet
+secrets::file { '/etc/krb5.keytab':
+  content => lookup('secrets::krb5_keytab'),
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `secrets::file` defined type:
+
+* [`content`](#-secrets--file--content)
+* [`path`](#-secrets--file--path)
+* [`owner`](#-secrets--file--owner)
+* [`group`](#-secrets--file--group)
+* [`mode`](#-secrets--file--mode)
+* [`seluser`](#-secrets--file--seluser)
+* [`selrole`](#-secrets--file--selrole)
+* [`seltype`](#-secrets--file--seltype)
+* [`selrange`](#-secrets--file--selrange)
+* [`selinux_ignore_defaults`](#-secrets--file--selinux_ignore_defaults)
+* [`notify_services`](#-secrets--file--notify_services)
+* [`posix_acl`](#-secrets--file--posix_acl)
+
+##### <a name="-secrets--file--content"></a>`content`
+
+Data type: `Variant[String, Sensitive[String]]`
+
+File content. Accepts String or Sensitive[String].
+Always stored and written as Sensitive to prevent exposure in logs and reports.
+When sourced from Hiera, declare the key as Sensitive in lookup_options.
+
+##### <a name="-secrets--file--path"></a>`path`
+
+Data type: `Optional[Stdlib::Absolutepath]`
+
+Absolute path of the target file. Defaults to $title when $title is a
+valid absolute path; must be set explicitly otherwise.
+
+Default value: `undef`
+
+##### <a name="-secrets--file--owner"></a>`owner`
+
+Data type: `Variant[String,Integer]`
+
+Passed directly to the `file` resource
+
+Default value: `'root'`
+
+##### <a name="-secrets--file--group"></a>`group`
+
+Data type: `Variant[String,Integer]`
+
+Passed directly to the `file` resource
+
+Default value: `'root'`
+
+##### <a name="-secrets--file--mode"></a>`mode`
+
+Data type: `Optional[Pattern[/^[0-7]{4}$/]]`
+
+Passed directly to the `file` resource
+
+Default value: `'0400'`
+
+##### <a name="-secrets--file--seluser"></a>`seluser`
+
+Data type: `Optional[String[1]]`
+
+Passed directly to the `file` resource
+
+Default value: `undef`
+
+##### <a name="-secrets--file--selrole"></a>`selrole`
+
+Data type: `Optional[String[1]]`
+
+Passed directly to the `file` resource
+
+Default value: `undef`
+
+##### <a name="-secrets--file--seltype"></a>`seltype`
+
+Data type: `Optional[String[1]]`
+
+Passed directly to the `file` resource
+
+Default value: `undef`
+
+##### <a name="-secrets--file--selrange"></a>`selrange`
+
+Data type: `Optional[String[1]]`
+
+Passed directly to the `file` resource
+
+Default value: `undef`
+
+##### <a name="-secrets--file--selinux_ignore_defaults"></a>`selinux_ignore_defaults`
+
+Data type: `Boolean`
+
+Passed directly to the `file` resource
+
+Default value: `false`
+
+##### <a name="-secrets--file--notify_services"></a>`notify_services`
+
+Data type: `Array`
+
+Service **titles** to try and notify if this changes
+
+Default value: `[]`
+
+##### <a name="-secrets--file--posix_acl"></a>`posix_acl`
+
+Data type: `Hash`
+
+Optional ACL entry hash passed to the posix_acl resource.
+Requires puppet/posix_acl and setfacl on the target node.
+action:     set | add | remove
+permission: Array of ACL entry strings, e.g. ['group:wheel:r--']
+
+Default value: `{}`
+
+### <a name="secrets--load"></a>`secrets::load`
 
 Find the secret on the system and make the relevant Files
 
 #### Examples
 
-#####
+##### 
 
 ```puppet
 secrets::load { '/etc/krb5.keytab':
@@ -90,21 +246,21 @@ secrets::load { '/etc/krb5.keytab':
 
 The following parameters are available in the `secrets::load` defined type:
 
-- [`mandatory`](#mandatory)
-- [`notify_services`](#notify_services)
-- [`posix_acl`](#posix_acl)
-- [`secretbase`](#secretbase)
-- [`path`](#path)
-- [`owner`](#owner)
-- [`group`](#group)
-- [`mode`](#mode)
-- [`selinux_ignore_defaults`](#selinux_ignore_defaults)
-- [`selrange`](#selrange)
-- [`seluser`](#seluser)
-- [`selrole`](#selrole)
-- [`seltype`](#seltype)
+* [`mandatory`](#-secrets--load--mandatory)
+* [`notify_services`](#-secrets--load--notify_services)
+* [`posix_acl`](#-secrets--load--posix_acl)
+* [`secretbase`](#-secrets--load--secretbase)
+* [`path`](#-secrets--load--path)
+* [`owner`](#-secrets--load--owner)
+* [`group`](#-secrets--load--group)
+* [`mode`](#-secrets--load--mode)
+* [`selinux_ignore_defaults`](#-secrets--load--selinux_ignore_defaults)
+* [`selrange`](#-secrets--load--selrange)
+* [`seluser`](#-secrets--load--seluser)
+* [`selrole`](#-secrets--load--selrole)
+* [`seltype`](#-secrets--load--seltype)
 
-##### <a name="mandatory"></a>`mandatory`
+##### <a name="-secrets--load--mandatory"></a>`mandatory`
 
 Data type: `Boolean`
 
@@ -112,15 +268,15 @@ Should the catalog crash if this secret doesn't exist
 
 Default value: `true`
 
-##### <a name="notify_services"></a>`notify_services`
+##### <a name="-secrets--load--notify_services"></a>`notify_services`
 
 Data type: `Array`
 
-Service **titles** to try and notify if this changes.
+Service **titles** to try and notify if this changes
 
 Default value: `[]`
 
-##### <a name="posix_acl"></a>`posix_acl`
+##### <a name="-secrets--load--posix_acl"></a>`posix_acl`
 
 Data type: `Hash`
 
@@ -128,7 +284,7 @@ Set these posix acls (see posix_acl resource)
 
 Default value: `{}`
 
-##### <a name="secretbase"></a>`secretbase`
+##### <a name="-secrets--load--secretbase"></a>`secretbase`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -136,7 +292,7 @@ The directory to use as the base to start the secret search
 
 Default value: `'/etc/puppetlabs/secrets/'`
 
-##### <a name="path"></a>`path`
+##### <a name="-secrets--load--path"></a>`path`
 
 Data type: `Stdlib::Absolutepath`
 
@@ -144,7 +300,7 @@ Passed directly to the `file` resource
 
 Default value: `$title`
 
-##### <a name="owner"></a>`owner`
+##### <a name="-secrets--load--owner"></a>`owner`
 
 Data type: `Variant[String,Integer]`
 
@@ -152,7 +308,7 @@ Passed directly to the `file` resource
 
 Default value: `'root'`
 
-##### <a name="group"></a>`group`
+##### <a name="-secrets--load--group"></a>`group`
 
 Data type: `Variant[String,Integer]`
 
@@ -160,15 +316,15 @@ Passed directly to the `file` resource
 
 Default value: `'root'`
 
-##### <a name="mode"></a>`mode`
+##### <a name="-secrets--load--mode"></a>`mode`
 
-Data type: `String`
+Data type: `Optional[String]`
 
 Passed directly to the `file` resource
 
 Default value: `'0400'`
 
-##### <a name="selinux_ignore_defaults"></a>`selinux_ignore_defaults`
+##### <a name="-secrets--load--selinux_ignore_defaults"></a>`selinux_ignore_defaults`
 
 Data type: `Boolean`
 
@@ -176,7 +332,7 @@ Passed directly to the `file` resource
 
 Default value: `false`
 
-##### <a name="selrange"></a>`selrange`
+##### <a name="-secrets--load--selrange"></a>`selrange`
 
 Data type: `Optional[String]`
 
@@ -184,7 +340,7 @@ Passed directly to the `file` resource
 
 Default value: `undef`
 
-##### <a name="seluser"></a>`seluser`
+##### <a name="-secrets--load--seluser"></a>`seluser`
 
 Data type: `Optional[String]`
 
@@ -192,7 +348,7 @@ Passed directly to the `file` resource
 
 Default value: `undef`
 
-##### <a name="selrole"></a>`selrole`
+##### <a name="-secrets--load--selrole"></a>`selrole`
 
 Data type: `Optional[String]`
 
@@ -200,10 +356,11 @@ Passed directly to the `file` resource
 
 Default value: `undef`
 
-##### <a name="seltype"></a>`seltype`
+##### <a name="-secrets--load--seltype"></a>`seltype`
 
 Data type: `Optional[String]`
 
 Passed directly to the `file` resource
 
 Default value: `undef`
+
