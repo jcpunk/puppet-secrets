@@ -312,4 +312,121 @@ describe 'secrets::load' do
     it { is_expected.not_to contain_file('/etc/${::networking.domain}/${::networking.hostname}/${::networking.fqdn}') }
     it { is_expected.to contain_file('/etc/example.com/testhost/testhost.example.com') }
   end
+
+  context 'with a custom mode' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    let(:title) { '/etc/krb5.keytab' }
+    let(:params) { { 'mode' => '0644' } }
+
+    it { is_expected.to compile }
+
+    it {
+      is_expected.to contain_file('/etc/krb5.keytab')
+        .with('mode' => '0644')
+    }
+  end
+
+  context 'with a path that differs from the title' do
+    let(:pre_condition) do
+      'function binary_file($name) { return \'testdata\' }'
+    end
+
+    # Title is only a label here; the real path is provided via the `path` param
+    let(:title) { 'krb5 keytab for testhost.example.com' }
+    let(:params) do
+      {
+        'path'      => '/etc/krb5.keytab',
+        'mandatory' => true,
+      }
+    end
+
+    it { is_expected.to compile }
+
+    it {
+      is_expected.to contain_file('/etc/krb5.keytab')
+    }
+    it { is_expected.not_to contain_file('krb5 keytab for testhost.example.com') }
+  end
+
+  context 'with a path that differs from the title and notify_services' do
+    let(:pre_condition) do
+      <<-PRECOND
+        function binary_file($name) { return 'testdata' }
+        service {'sshd.service': }
+      PRECOND
+    end
+
+    let(:title) { 'app key for testhost.example.com' }
+    let(:params) do
+      {
+        'path'            => '/etc/myapp/key',
+        'mandatory'       => true,
+        'notify_services' => ['sshd.service'],
+      }
+    end
+
+    it { is_expected.to compile }
+
+    # The relationship is attached to the resource named by `path`, not the title
+    it {
+      is_expected.to contain_file('/etc/myapp/key')
+        .with_notify(['Service[sshd.service]'])
+    }
+    it { is_expected.not_to contain_file('app key for testhost.example.com') }
+  end
+
+  context 'with every parameter set' do
+    let(:pre_condition) do
+      <<-PRECOND
+        function binary_file($name) { return 'testdata' }
+        service {'sshd.service': }
+      PRECOND
+    end
+
+    let(:title) { '/etc/krb5.keytab' }
+    let(:params) do
+      {
+        'path'                  => '/etc/krb5.keytab',
+        'owner'                 => 0,
+        'group'                 => 0,
+        'mode'                  => '0640',
+        'mandatory'             => true,
+        'secretbase'            => '/etc/puppet/secrets',
+        'notify_services'       => ['sshd.service'],
+        'posix_acl'             => {
+          'action'     => 'set',
+          'permission' => ['group:wheel:r--'],
+        },
+        'selinux_ignore_defaults' => true,
+        'seluser'               => 'system_u',
+        'selrole'               => 'object_r',
+        'seltype'               => 'krb5_keytab_t',
+        'selrange'              => 's0',
+      }
+    end
+
+    it { is_expected.to compile }
+
+    it {
+      is_expected.to contain_file('/etc/krb5.keytab')
+        .with('owner'     => 0)
+        .with('group'     => 0)
+        .with('mode'      => '0640')
+        .with('seluser'   => 'system_u')
+        .with('selrole'   => 'object_r')
+        .with('seltype'   => 'krb5_keytab_t')
+        .with('selrange'  => 's0')
+        .with('selinux_ignore_defaults' => true)
+        .with_notify(['Service[sshd.service]'])
+    }
+
+    it {
+      is_expected.to contain_posix_acl('/etc/krb5.keytab')
+        .with('action' => 'set')
+        .with('permission' => ['group:wheel:r--'])
+    }
+  end
 end

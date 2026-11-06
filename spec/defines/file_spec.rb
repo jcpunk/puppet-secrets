@@ -59,9 +59,9 @@ describe 'secrets::file' do
     let(:params) do
       {
         'content'  => 'secret',
-        'owner'    => 'root',
-        'group'    => 'root',
-        'mode'     => '0400',
+        'owner'    => 'daemon',
+        'group'    => 'daemon',
+        'mode'     => '0640',
         'seluser'  => 'system_u',
         'selrole'  => 'object_r',
         'seltype'  => 'krb5_keytab_t',
@@ -74,9 +74,9 @@ describe 'secrets::file' do
 
     it {
       is_expected.to contain_file('/etc/krb5.keytab')
-        .with('owner'     => 'root')
-        .with('group'     => 'root')
-        .with('mode'      => '0400')
+        .with('owner'     => 'daemon')
+        .with('group'     => 'daemon')
+        .with('mode'      => '0640')
         .with('ensure'    => 'file')
         .with('show_diff' => false)
         .with('backup'    => false)
@@ -190,5 +190,96 @@ describe 'secrets::file' do
     end
 
     it { is_expected.not_to compile }
+  end
+
+  context 'with notify_services' do
+    let(:pre_condition) do
+      <<-PRECOND
+        function binary_file($name) { return 'testdata' }
+        service {'sshd.service': }
+        service {'httpd.service': }
+      PRECOND
+    end
+
+    let(:title) { '/etc/krb5.keytab' }
+    let(:params) do
+      {
+        'content'         => 'secret',
+        'notify_services' => ['sshd.service', 'httpd.service'],
+      }
+    end
+
+    it { is_expected.to compile }
+
+    it {
+      is_expected.to contain_file('/etc/krb5.keytab')
+        .with_notify(['Service[sshd.service]', 'Service[httpd.service]'])
+    }
+  end
+
+  context 'with a custom mode' do
+    let(:title) { '/etc/krb5.keytab' }
+    let(:params) { { 'content' => 'secret', 'mode' => '0600' } }
+
+    it { is_expected.to compile }
+
+    it { is_expected.to contain_file('/etc/krb5.keytab').with('mode' => '0600') }
+  end
+
+  context 'with every parameter set' do
+    let(:pre_condition) do
+      <<-PRECOND
+        function binary_file($name) { return 'testdata' }
+        service {'sshd.service': }
+      PRECOND
+    end
+
+    let(:title) { 'tls key for myapp' }
+    let(:params) do
+      {
+        'path'                  => '/etc/myapp/tls.key',
+        'content'               => 'secret',
+        'owner'                 => 0,
+        'group'                 => 0,
+        'mode'                  => '0640',
+        'notify_services'       => ['sshd.service'],
+        'posix_acl'             => {
+          'action'     => 'set',
+          'permission' => ['group:myapp:r--'],
+        },
+        'selinux_ignore_defaults' => true,
+        'seluser'               => 'system_u',
+        'selrole'               => 'object_r',
+        'seltype'               => 'mysystem_key_t',
+        'selrange'              => 's0',
+      }
+    end
+
+    it { is_expected.to compile }
+
+    it {
+      is_expected.to contain_file('/etc/myapp/tls.key')
+        .with('ensure'    => 'file')
+        .with('owner'     => 0)
+        .with('group'     => 0)
+        .with('mode'      => '0640')
+        .with('content'   => sensitive('secret'))
+        .with('force'     => true)
+        .with('show_diff' => false)
+        .with('backup'    => false)
+        .with('seluser'   => 'system_u')
+        .with('selrole'   => 'object_r')
+        .with('seltype'   => 'mysystem_key_t')
+        .with('selrange'  => 's0')
+        .with('selinux_ignore_defaults' => true)
+        .with_notify(['Service[sshd.service]'])
+    }
+
+    it {
+      is_expected.to contain_posix_acl('/etc/myapp/tls.key')
+        .with('action' => 'set')
+        .with('permission' => ['group:myapp:r--'])
+        .that_requires('File[/etc/myapp/tls.key]')
+    }
   end
 end
